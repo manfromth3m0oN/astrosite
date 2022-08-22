@@ -1,0 +1,118 @@
+---
+	import Layout from '../layouts/Layout.astro';
+	import BlogSnippet from '../components/BlogSnippet.astro';
+	import BlogList from '../components/BlogList.astro';
+
+	export interface Frontmatter {
+		title: string;
+		date: string;
+	}
+
+	const postTitles = await Astro.glob<Frontmatter>('../pages/posts/*.md');
+---
+
+<Layout title="Max's Blog | m0on.xyz">
+	<main>
+		<h1 class="title">Welcome to <span class="text-gradient">Max's Blog</span></h1>
+		<div>
+			<ul class="nav">
+				<li>About</li>
+				<li>Blog</li>
+				<li>Projects</li>
+				<li>Links</li>
+			</ul>
+		</div>
+		<div class="divider">
+			<div class="left-container">
+				{postTitles.map(post => <div> <BlogSnippet title={post.frontmatter.title} body={post.compiledContent()} url={post.url}/></div>)}
+			</div>
+			<div class="right-container">
+			<BlogList posts={postTitles} />
+			</div>
+		</div>
+	</main>
+</Layout>
+
+<style>
+	:root {
+		--astro-gradient: linear-gradient(0deg, #4f39fa, #da62c4);
+	}
+
+	ul.nav li {
+		display: inline;
+		padding-left: 5em;
+	}
+
+	.nav {
+		display: flex;
+		justify-content: space-evenly;
+		padding-left: 0;
+		background-image: var(--astro-gradient);
+		background-size: 100% 200%;
+		background-position-y: 100%;
+		border-radius: 5px;
+		color: white;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+
+	.title {
+		padding: 20rem 0;
+		font-size: 100px;
+		text-align: center;
+	}
+
+	main {
+		margin: auto;
+		padding: 1em;
+		max-width: 155ch;
+	}
+
+	.divider {
+		display: flex;
+	}
+
+	.left-container {
+		flex: 3 1 0;
+	}
+
+	.right-container {
+		flex: 1 1 0;
+		display: flex;
+		flex-direction: column;
+		border-left: 2px solid rgb(202, 202, 202);
+		border-radius: 5px;
+		padding-left: 1em;
+		height: 100%
+	}
+
+
+	.text-gradient {
+		font-weight: 900;
+		background-image: var(--astro-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 100% 200%;
+		background-position-y: 100%;
+		border-radius: 0.4rem;
+		animation: pulse 4s ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		0%,
+		100% {
+			background-position-y: 0%;
+		}
+
+		50% {
+			background-position-y: 80%;
+		}
+	}
+
+    hr {
+        border: 1px solid rgb(202, 202, 202);
+        border-radius: 5px;
+        margin-left: 5em;
+        margin-right: 5em;
+    }
+</style>

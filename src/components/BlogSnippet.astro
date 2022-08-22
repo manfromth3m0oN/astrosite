@@ -1,0 +1,41 @@
+---
+    export interface Props {
+        title: string;
+        body: string;
+        url: any;
+    }
+
+    const { title, body, url } = Astro.props as Props
+    let limitedBody = body.substring(0, 1024) + "...";
+---
+
+<div>
+    <h1 class="title"><a href={url}>{title}</a></h1>
+
+    <div set:html={limitedBody}></div>
+    <hr />
+</div>
+
+<style>
+    .title {
+        font-size: 50px;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    a:hover {
+        color: #da62c4;
+    }
+
+    hr {
+        border: 1px solid rgb(202, 202, 202);
+        border-radius: 5px;
+        margin-left: 5em;
+        margin-right: 5em;
+        margin-bottom: 2em;
+        margin-top: 2em;
+    }
+</style>

@@ -1,0 +1,49 @@
+--- 
+    import type { MarkdownInstance } from "astro";
+    import type { Frontmatter } from "../pages/index.astro";
+
+    export interface Props {
+        posts: MarkdownInstance<Frontmatter>[]
+    }
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    const { posts } = Astro.props as Props
+
+    let postList = new Map<string, string[]>();
+    for (var post of posts) {
+        let postDate = new Date(post.frontmatter.date);
+        let heading = `${monthNames[postDate.getMonth()]} ${postDate.getFullYear()}`
+        let list = postList.get(heading);
+        if (list !== undefined) {
+            list.push(post.frontmatter.title)
+            postList.set(heading, list)
+        } else {
+            postList.set(heading, [post.frontmatter.title])
+        }
+    }
+---
+
+<div>
+    <h3>Posts</h3>
+    {[...postList.keys()].map((key: string) => (
+    <h4>{key}</h4>
+    <ul>
+        {postList.get(key)?.map((title) => (
+            <li><a href={post.url}>{title}</a></li>
+        ))}
+    </ul>
+    ))}
+</div>
+
+<style>
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    a:hover {
+        color: #da62c4;
+    }
+</style>
